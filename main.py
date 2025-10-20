@@ -10,10 +10,15 @@ app = FastAPI()
 async def test_db_connection():
     try:
         pool = await asyncpg.create_pool(
-            dsn=os.getenv("DATABASE_URL"),
+            user=os.getenv("user"),
+            password=os.getenv("password"),
+            host=os.getenv("host"),
+            port=os.getenv("port"),
+            database=os.getenv("dbname"),
+            ssl="require",  # Ensures SSL
             timeout=30,
             command_timeout=60
-     )
+        )
         async with pool.acquire() as conn:
             await conn.execute("SELECT 1")
         await pool.close()
